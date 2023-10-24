@@ -5,6 +5,7 @@ Created on Tue Oct 24
 @author: DorianGuzman
 """
 import pandas as pd
+import numpy as np
 
 
 def instantaneous_soiling_ratio(df: pd.DataFrame)->pd.DataFrame:
@@ -53,3 +54,27 @@ def instantaneous_soiling_ratio(df: pd.DataFrame)->pd.DataFrame:
                               (df_filtered['S_ratio'] <= mean_s_ratio + 2 * std_s_ratio)]
 
     return df_filtered
+
+
+def calculate_daily_soiling_rate(df_rate: pd.DataFrame)->pd.DataFrame:
+    """
+    Calculate the daily soiling rate from a given DataFrame with rain_mm and S_ratio
+     as columns.
+
+    Parameters
+    ----------
+    df_rate : pandas.DataFrame
+        The input DataFrame containing soiling instantaneous.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame with daily soiling rates.
+    """
+    # Calculate daily mean values for S_ratio
+    daily_s_ratio = df_rate['S_ratio'].resample('D').mean()
+
+    # Combine the daily Series into a DataFrame
+    daily_rate = pd.DataFrame({'S_ratio': daily_s_ratio})
+
+    return daily_rate
