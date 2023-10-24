@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Oct 24 18:48:03 2023
+Created on Tue Oct 24
 
 @author: DorianGuzman
 """
