@@ -7,7 +7,8 @@ Created on Tue Oct 24
 import pandas as pd
 import os
 
-def read_data(filename):
+
+def read_data(filename: str)->pd.DataFrame:
     """
     Read data from a CSV file and preprocess it for analysis.
 
@@ -26,27 +27,27 @@ def read_data(filename):
     if not os.path.isfile(filename):
         raise FileNotFoundError(f"File not found: {filename}")
 
-    # Define column data types to improve performance
+    # Define the data types for specific columns
     dtype_mapping = {
-        'wind_speed': float,
-        'tmp_amb': float,
-        'poa': float,
-        'tmp_cell': float,
-        'ac_power': float,
-        'rain_mm': float,
+        'data_date': 'str',
+        'wind_speed': 'float32',
+        'tmp_amb': 'float32',
+        'poa': 'float32',
+        'tmp_cell': 'float32',
+        'ac_power': 'float32',
+        'rain_mm': 'float32'
     }
 
     # Read the CSV file into a DataFrame with predefined data types
-    df = pd.read_csv(filename, dtype=dtype_mapping, parse_dates=['data_date'], errors='coerce')
-
+    df = pd.read_csv(filename, dtype=dtype_mapping, parse_dates=['data_date'])
+    # Rename columns
+    df = df.rename(columns={'data_date': 'datetime'})
+    
+    # Set the 'datetime' column as the DataFrame index
+    df.set_index('datetime', drop=True, inplace=True)
+    
     # Convert 'ac_power' to watts
     df['ac_power'] *= 1000
-
-    # Set the 'data_date' column as the index
-    df.set_index('data_date', drop=True, inplace=True)
-
-    # Rename columns if needed
-    # df = df.rename(columns={'old_column_name': 'new_column_name'})
 
     return df
 
